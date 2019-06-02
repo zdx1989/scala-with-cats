@@ -1,4 +1,4 @@
-package com.zdx.cats.part1.monoid_semigroup
+package com.zdx.cats.part1.functor
 
 import cats.Functor
 
