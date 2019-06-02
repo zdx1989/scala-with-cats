@@ -1,6 +1,5 @@
 package com.zdx.cats.part1.functor
 
-import Box
 
 /**
   * Created by zhoudunxiong on 2019/6/2.
