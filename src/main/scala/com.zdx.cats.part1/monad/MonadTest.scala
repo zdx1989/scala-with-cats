@@ -11,6 +11,7 @@ object MonadTest {
   import cats.syntax.flatMap._
   import cats.syntax.functor._
   import scala.language.higherKinds
+  import cats.Id
 
   def sumSquare[F[_] : Monad](fa: F[Int], fb: F[Int]): F[Int] =
     for {
