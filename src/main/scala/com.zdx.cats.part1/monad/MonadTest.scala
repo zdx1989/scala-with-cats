@@ -7,11 +7,12 @@ package com.zdx.cats.part1.monad
   */
 object MonadTest {
 
+  import scala.language.higherKinds
   import cats.Monad
   import cats.syntax.flatMap._
   import cats.syntax.functor._
-  import scala.language.higherKinds
-  import cats.Id
+  import cats.syntax.either._
+
 
   def sumSquare[F[_] : Monad](fa: F[Int], fb: F[Int]): F[Int] =
     for {
@@ -19,4 +20,12 @@ object MonadTest {
       b <- fb
     } yield a * a + b * b
 
+
+  def countPositive(list: List[Int]): Either[String, Int] =
+    list.foldLeft(0.asRight[String]) { (acc, num) =>
+      if (num > 0)
+        acc.map(_ + 1)
+      else
+        "negative stoppping".asLeft[Int]
+    }
 }
