@@ -3,7 +3,7 @@ package com.zdx.cats.part1.monad
 /**
   * Created by zhoudunxiong on 2019/6/2.
   */
-object IdTest {
+object IdMonad {
 
   import cats.Id
 
