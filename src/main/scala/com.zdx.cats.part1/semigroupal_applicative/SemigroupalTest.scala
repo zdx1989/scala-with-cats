@@ -1,5 +1,6 @@
 package com.zdx.cats.part1.semigroupal_applicative
 
+
 /**
   * Created by zhoudunxiong on 2019/6/6.
   */
@@ -7,6 +8,9 @@ object SemigroupalTest extends App {
 
   import cats.syntax.either._
   import cats.instances.option._
+  import cats.instances.list._
+  import cats.syntax.flatMap._
+  import cats.syntax.functor._
 
   def parseNumber(str: String): Either[String, Int] =
     Either.catchOnly[NumberFormatException](str.toInt)
@@ -171,4 +175,52 @@ object SemigroupalTest extends App {
   Validated.fromEither[String, Int](Left("Error"))
 
   Validated.fromOption[String, Int](Option(123), "ygy")
+
+  //exercise from validation
+
+  import cats.data.Validated
+
+  type FormData = Map[String, String]
+  type FailFast[A] = Either[List[String], A]
+  type FailSlow[A] = Validated[List[String], A]
+
+  def getValue(field: String)(data: FormData): FailFast[String] =
+    data.get(field).toRight(List(s"$field field not specified"))
+
+
+  def noBlank(field: String)(data: String): FailFast[String] =
+    Right(data)
+      .ensure(List(s"$field cannot be blank"))(_.nonEmpty)
+
+  def noNegative(field: String)(data: Int): FailFast[Int] =
+    Right(data)
+      .ensure(List(s"$field cannot be negative"))(_ > 0)
+
+  import scala.util._
+
+  def parseInt(field: String)(data: String): FailFast[Int] =
+    Try(data.toInt) match {
+      case Success(value) => Right(value)
+      case Failure(_) => Left(List(s"$field must be a integer"))
+    }
+
+  def readName(map: Map[String, String]): FailFast[String] =
+    getValue("name")(map)
+      .flatMap(noBlank("name"))
+
+
+  def readAge(map: Map[String, String]): FailFast[Int] =
+    getValue("age")(map)
+      .flatMap(noBlank("age"))
+      .flatMap(parseInt("age"))
+      .flatMap(noNegative("age"))
+
+
+  case class User(name: String, age: Int)
+
+  def readUser(map: Map[String, String]): FailSlow[User] = {
+    import cats.instances.list._
+    import cats.syntax.apply._
+    Semigroupal.map2(readName(map).toValidated, readAge(map).toValidated)(User.apply)
+  }
 }
