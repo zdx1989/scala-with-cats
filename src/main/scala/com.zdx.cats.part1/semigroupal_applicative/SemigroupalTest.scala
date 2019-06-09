@@ -221,6 +221,9 @@ object SemigroupalTest extends App {
   def readUser(map: Map[String, String]): FailSlow[User] = {
     import cats.instances.list._
     import cats.syntax.apply._
-    Semigroupal.map2(readName(map).toValidated, readAge(map).toValidated)(User.apply)
+    Semigroupal.map2(
+      readName(map).toValidated,
+      readAge(map).toValidated
+    )(User.apply)
   }
 }
