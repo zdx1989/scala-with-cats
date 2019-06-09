@@ -3,7 +3,7 @@ package com.zdx.cats.part1.flodable_traverses
 /**
   * Created by zhoudunxiong on 2019/6/9.
   */
-object FoldableTest {
+object FoldableTest extends App{
 
   def show[A](list: List[A]): String =
     list.foldLeft("nil") { (accum, item) =>
@@ -43,6 +43,21 @@ object FoldableTest {
   def sumWithNumeric[A](list: List[A])(implicit na: Numeric[A]): A =
     list.foldRight(na.zero)(na.plus)
 
+  //traversing with Vectors
 
+  def listSequence[A](list: List[Vector[A]]): Vector[List[A]] = {
 
+    def loop(index: Int, res: Vector[List[A]]): Vector[List[A]] = index match {
+      case m if m == list.length => res
+      case n =>
+        if (list(n).isEmpty) loop(n + 1, res)
+        else {
+          loop(n + 1, res :+ list(n).toList)
+        }
+    }
+
+    loop(0, Vector())
+  }
+
+  listSequence(List(Vector(1, 2), Vector(3, 4)))
 }
