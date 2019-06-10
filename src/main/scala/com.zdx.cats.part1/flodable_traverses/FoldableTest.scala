@@ -1,5 +1,7 @@
 package com.zdx.cats.part1.flodable_traverses
 
+import cats.Foldable
+
 /**
   * Created by zhoudunxiong on 2019/6/9.
   */
@@ -59,5 +61,60 @@ object FoldableTest extends App{
     loop(0, Vector())
   }
 
-  listSequence(List(Vector(1, 2), Vector(3, 4)))
+  def listSequence1[A](list: List[Vector[A]]): Vector[List[A]] = {
+    list.foldLeft(Vector.empty[List[A]]) { (accum, item) =>
+      accum :+ item.toList
+    }
+  }
+
+  val res = listSequence1(List(Vector(1, 2), Vector(3, 4)))
+
+  println(res)
+
+  //Foldable in cats
+  import cats.Foldable
+  import cats.instances.list._
+
+  val list = List(1, 2, 3)
+
+  val foldRes = Foldable[List].foldLeft(list, 0)(_ + _)
+
+  import cats.instances.option._
+
+  val maybe = Option(1)
+
+  val foldOption = Foldable[Option].foldLeft(maybe, 10)(_ * _)
+
+  //the implementation of foldRight for Stream is not stack safe
+  import cats.Eval
+  import cats.instances.stream._
+
+  val stream = (1 to 100000).toStream
+  val foldStream = stream.foldRight(0L)(_ + _)
+
+  val eval: Eval[Long] = Foldable[Stream].foldRight(stream, Eval.now(0L)) { (item, accmu) =>
+    accmu.map(_ + item)
+  }
+
+  val foldEval = eval.value
+
+
+  import cats.instances.list._
+  Foldable[Option].nonEmpty(Some(1))
+  Foldable[List].find(List(1, 2, 3))(_ > 2)
+
+  import cats.instances.int._
+  Foldable[List].combineAll(List(1, 2, 3))
+
+  import cats.instances.string._
+  Foldable[List].foldMap(List(1, 2, 3))(_.toString)
+
+  import cats.instances.vector._
+  val ints = List(Vector(1, 2, 3), Vector(4, 5, 6))
+  (Foldable[List] compose Foldable[Vector]).combineAll(ints)
+
+  import cats.syntax.foldable._
+
+  List(1, 2, 3).combineAll
+  List(1, 2, 3).foldMap(_.toString)
 }
