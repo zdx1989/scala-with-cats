@@ -75,4 +75,23 @@ object TraversesTest extends App {
     listTraverse(list)(identity)
 
 
+  val totalTime = listTraverse(hostNames)(getTime)
+  val totalRes = Await.result(totalTime, 2.seconds)
+
+  import cats.Traverse
+  import cats.instances.future._ // for Applicative
+  import cats.instances.list._ // for Traverse
+
+  val totalTime1: Future[List[Int]] =
+    Traverse[List].traverse(hostNames)(getTime)
+  val totalRes1 = Await.result(totalTime1, 2.seconds)
+
+  val numbers = List(Future(1), Future(2), Future(3))
+  val numbers1 = Traverse[List].sequence(numbers)
+  val numberRes = Await.result(numbers1, 2.seconds)
+
+  import cats.syntax.traverse._
+  val totalTime2 = hostNames.traverse(getTime)
+  val numberRes1 = numbers.sequence
+
 }
