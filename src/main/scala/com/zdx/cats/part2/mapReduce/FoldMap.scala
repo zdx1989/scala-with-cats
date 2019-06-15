@@ -60,4 +60,11 @@ object FoldMap {
 
   Monoid[Future[Int]].combine(future1, future2)
 
+
+  //dividing work
+  val codes = Runtime.getRuntime.availableProcessors()
+
+  //partition sequence using grouped
+  val groupList = (1 to 10).toList.grouped(4).toList
+
 }
