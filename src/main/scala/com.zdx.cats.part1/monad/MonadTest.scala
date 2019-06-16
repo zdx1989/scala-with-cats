@@ -5,6 +5,18 @@ package com.zdx.cats.part1.monad
 /**
   * Created by zhoudunxiong on 2019/6/2.
   */
+
+// Monad --> def flatMap[F[_], A, B](fa: F[A])(func: A => F[B]): F[B]
+// Monad extend applicative --> def pure[F[_], A](a: A): F[A]
+// val -- Now --> eager, memorized
+// lazy val -- Later --> lazy, memorized
+// def -- Always --> lazy, not memorized
+// MonadError
+// Eval Monad
+// Writer Monad logging; type Writer[W, A] = WriterT[Id, W, A]
+// Reader Monad dependence injection;
+// State Monad: transform input state to out state and compute a result State => (State, Result)
+
 object MonadTest {
 
   import scala.language.higherKinds

@@ -3,6 +3,9 @@ package com.zdx.cats.part1.flodable_traverses
 /**
   * Created by zhoudunxiong on 2019/6/10.
   */
+
+//Traverse --> def traverse[F[_], G[_], A, B](fa: F[G[A]])(func: A => B): G[F[B]]
+//Traverse --> def sequence[F[_], G[_], A](fa: F[G[A]]): G[F[A]] = traverse(fa)(identify)
 object TraversesTest extends App {
 
   import scala.concurrent._

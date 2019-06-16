@@ -5,6 +5,8 @@ import cats.Foldable
 /**
   * Created by zhoudunxiong on 2019/6/9.
   */
+
+// Foldable --> foldleft, foldright, combineAll, foldMap
 object FoldableTest extends App{
 
   def show[A](list: List[A]): String =

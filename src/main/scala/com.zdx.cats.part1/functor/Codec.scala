@@ -4,6 +4,10 @@ package com.zdx.cats.part1.functor
 /**
   * Created by zhoudunxiong on 2019/6/2.
   */
+
+//Funtor --> def map[F[_], A, B](a: F[A])(func: A => B): F[B]
+//Contravariant functor --> def contramap[F[_], A, B](fa: F[A])(func: B => A): F[B]
+//Invariant functor --> def imap[F[_], A, B](fa: F[A])(enc: A => B, dec: B => A): F[B]
 trait Codec[A] {
 
   def encode(value: A): String

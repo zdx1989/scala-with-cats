@@ -4,6 +4,9 @@ package com.zdx.cats.part1.semigroupal_applicative
 /**
   * Created by zhoudunxiong on 2019/6/6.
   */
+
+// Semigroup tupled and mapN
+// Validated
 object SemigroupalTest extends App {
 
   import cats.syntax.either._

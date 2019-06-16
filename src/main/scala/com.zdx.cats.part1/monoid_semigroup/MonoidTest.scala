@@ -3,6 +3,11 @@ package com.zdx.cats.part1.monoid_semigroup
 /**
   * Created by zhoudunxiong on 2019/6/1.
   */
+
+//Semigroup --> def combine[A](a1 A, a1: A): A; a1 |+| a2
+//Monoid extend Semigroup --> combine & empty[A](): A
+//associativeLaw and identityLaw
+
 object MonoidTest {
   import cats.Monoid
   import cats.instances.int._
