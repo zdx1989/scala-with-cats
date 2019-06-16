@@ -12,6 +12,8 @@ import cats.syntax.apply._
   */
 sealed trait Predicate[E, A] {
 
+  import Predicate._
+
   def and(that: Predicate[E, A]): Predicate[E, A] =
     And(this, that)
 
@@ -20,7 +22,7 @@ sealed trait Predicate[E, A] {
 
   def apply(value: A)(implicit se: Semigroup[E]): Validated[E, A] =
     this match {
-      case Prue(func) => func(value)
+      case Pure(func) => func(value)
       case And(left, right) =>
         (left(value), right(value)).mapN((_, _) => value)
       case Or(left, right) =>
@@ -36,23 +38,27 @@ sealed trait Predicate[E, A] {
 
 }
 
-final case class And[E, A](left: Predicate[E, A],
-                           right: Predicate[E, A]) extends Predicate[E, A]
-
-final case class Or[E, A](left: Predicate[E, A],
-                          right: Predicate[E, A]) extends Predicate[E, A]
-
-final case class Prue[E, A](func: A => Validated[E, A]) extends Predicate[E, A]
 
 object Predicate {
 
+  final case class And[E, A](left: Predicate[E, A],
+                             right: Predicate[E, A]) extends Predicate[E, A]
 
-  val a = Prue[List[String], Int]{ v =>
+  final case class Or[E, A](left: Predicate[E, A],
+                            right: Predicate[E, A]) extends Predicate[E, A]
+
+  final case class Pure[E, A](func: A => Validated[E, A]) extends Predicate[E, A]
+
+  def lift[E, A](err: E, fn: A => Boolean): Predicate[E, A] =
+    Pure(a => if(fn(a)) a.valid else err.invalid)
+
+
+  val a = Pure[List[String], Int]{ v =>
     if (v > 2) v.valid[List[String]]
     else List("Muste be > 2").invalid[Int]
   }
 
-  val b = Prue[List[String], Int] { v =>
+  val b = Pure[List[String], Int] { v =>
     if (v < -2) v.valid[List[String]]
     else List("Muste be < -2").invalid[Int]
   }
